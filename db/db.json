@@ -1,5 +1,5 @@
 {
-  "images": [  //also called cards in my code
+  "images": [
     {
       "id": 1,
       "title": "Coder dog",
@@ -17,27 +17,27 @@
     {
       "id": 1,
       "content": "What a cute dog!",
-      "imageId": 1 //DOG
-    },
-    {
-      "imageId": 1, //DOG
-      "content": "Funny dog!!",
-      "id": 4
-    },
-    {
-      "imageId": 1, //DOG
-      "content": "Hes a good boy!!",
-      "id": 5
+      "imageId": 1
     },
     {
       "id": 2,
       "content": "He has the paws for this!",
-      "imageId": 2 //CAT
+      "imageId": 2
     },
     {
       "id": 3,
       "content": "Someone's in trouble!",
-      "imageId": 2 //CAT
+      "imageId": 2
+    },
+    {
+      "imageId": 1,
+      "content": "Funny dog!!",
+      "id": 4
+    },
+    {
+      "imageId": 1,
+      "content": "Hes a good boy!!",
+      "id": 5
     }
   ]
 }
