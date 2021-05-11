@@ -130,14 +130,17 @@ function renderCards(cardsData) {
             imageId: card.id
           })//PATCH body=data I want to create in the db
         })//fetch card.id to add comment
-        .then(function() {
-          ulEl = document.querySelector(`ul`)
-          let newliEl = document.createElement(`li`)
-          newliEl.innerText = inputEl.value
-          ulEl.append(newliEl)
+        .then(function(response) {
+          console.log(response)
+          if (response.ok) {
+            console.log(`Done!`)
+            let newliEl = document.createElement(`li`)
+            newliEl.innerText = inputEl.value
+            ulEl.append(newliEl)
+            formEl.reset();
+          }
         })
         
-        formEl.reset();
       }) //buttonCommentEL.addEventListener 
     // }//function addComment
 

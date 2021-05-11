@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "Coder dog",
-      "likes": 13,
+      "likes": 14,
       "image": "./assets/coder-dog.png"
     },
     {
@@ -40,19 +40,24 @@
       "id": 5
     },
     {
-      "content": "matteo ",
+      "content": "ciao bello",
       "imageId": 1,
       "id": 6
     },
     {
-      "content": "hello",
+      "content": "matteo ",
       "imageId": 1,
       "id": 7
     },
     {
-      "content": "vale",
+      "content": "alice",
       "imageId": 1,
       "id": 8
+    },
+    {
+      "content": "saluti",
+      "imageId": 1,
+      "id": 9
     }
   ]
 }
