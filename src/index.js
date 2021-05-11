@@ -21,20 +21,19 @@ fetch("http://localhost:3000/images")//I am calling a db named "images"
   .then(function(response) {
     return response.json() //trasform json into obj js
   })
-  .then(function(data) {  // I am giving the name to the obj received before
-    console.log(data)
+  .then(function(postsData) {  // I am giving the name to the obj received before
+    console.log(postsData)
 
-    renderCards(data)
+    renderCards(postsData)
   })
   .catch(console.error)
 
 
-
-
-function renderCards(cards) {
+function renderCards(cardsData) {
   let wrapperSectionEl = document.querySelector(`.image-container`)
-
-  for (const card of cards) { //cards (in this exercise) are the "images" in the db.json
+  
+  //rendering ONE card at the time:
+  for (const card of cardsData) { //cardsData refers to "images" in the db.json
     let articleEl = document.createElement(`article`) 
     articleEl.setAttribute(`class`, `image-card`)
       let titleEl = document.createElement(`h2`)
@@ -50,44 +49,28 @@ function renderCards(cards) {
   
       let spanEl = document.createElement(`span`)
       spanEl.setAttribute(`class`, `likes`)
-      spanEl.innerText = card.likes 
+      spanEl.innerText = `${card.likes} likes` 
   
       let buttonLikeEl = document.createElement(`button`)
       buttonLikeEl.setAttribute(`class`, `like-button`)
       buttonLikeEl.innerText = `♥`
 
-      //comment Ul
+    //comment Ul
     let ulEl = document.createElement(`ul`)
     ulEl.setAttribute(`class`, `comments`)
+    
+    //create the comment for each card (as many as there are)
+    for (const comment of card.comments) {
+      let liEl = document.createElement(`li`)
+      liEl.innerText = comment.content
+        ulEl.append(liEl)
+    }
 
-    // let liEl1 = document.createElement(`li`)
-    // liEl1.innerText = card.comments[0].content
-    // let liEl2 = document.createElement(`li`)
-    // liEl2.innerText = card.comments[1].content
-    // let liEl3 = document.createElement(`li`)
-    // liEl3.innerText = card.comments[2].content    
-
-    // let liEl3 = document.createElement(`li`)
     
     wrapperSectionEl.append(articleEl)
     articleEl.append(titleEl, imgEl, likesDivEl, ulEl) //missing the form after the Ul
     likesDivEl.append(spanEl, buttonLikeEl)
-    // ulEl.append(liEl1, liEl2, liEl3)
 
-//ANOTHER WAY I WAS TRU+YING TO DO FOR THE COMMENTS:
-    // for (const comment of card.comments) {
-      // if (card.comments.imageId === card.id) {
-        // let liEl = document.createElement(`li`)
-        // liEl.innerText = card.comments.content
-        // ulEl.append(liEl)
-      // }
-    // }
-
-
-    // for (const comment of cards.comments) {
-    //   let commentLiEl = document.createElement(`li`)
-    //   commentLiEl.innerText = comment.content
-    // }
   }
 }
   
