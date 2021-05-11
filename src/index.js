@@ -1,21 +1,24 @@
-// Description
+// Description****
 // We're going to put to good use our knowledge of fetch by creating a full client in the browser! To achieve this, you'' 
 // have to set up all the interactions with the server
-
-// Instructions
-// - Use this template as a starting point. Make sure you download it into your laptop => https://codesandbox.io/s/instabool-template-cwhm7?file=/index.html
-// - Set up your json-server using the files in the db folder; You must start the server on your local machine, 
+// Instructions ****
+// -DONE- Use this template as a starting point. Make sure you download it into your laptop => https://codesandbox.io/s/instabool-template-cwhm7?file=/index.html
+// -DONE- Set up your json-server using the files in the db folder; You must start the server on your local machine, 
 //   using this exact command from the terminal on the root of your project folder:  json-server --watch db/db.json --routes db/routes.json 
-
-// - Dynamically render the posts using the card HTML portion that you'll find in the index.html
-// - Try to use the same CSS classes to achieve the desired look
-
-
-// Tips
+// -DONE- Dynamically render the posts using the card HTML portion that you'll find in the index.html
+// -DONE- Try to use the same CSS classes to achieve the desired look
+// Tips****
 // - Make some requests to your server and inspect the response, so you can check the data structure before start coding
 // - Focus first on render the data onto your page
 // - Try to think which kind of HTTP method you should use on each occasion
 // - Try to use function scopes to your advantage
+
+// Today's Exercise starts here
+// - You can use the same repo from yesterday's exercise
+// - If you haven't fully completed yesterday's part, use Nico's review from this morning as a stepping point
+// - Have the like button adding 1 like to the respective counter each time you click it, and display the changes
+// - Have the comments form to add another comment to the respective post, and display the changes
+// - The data must be persisted in the server so that when you refresh the page it doesn't go away
 
 fetch("http://localhost:3000/images")//I am calling a db named "images"
   .then(function(response) {
@@ -32,7 +35,7 @@ fetch("http://localhost:3000/images")//I am calling a db named "images"
 function renderCards(cardsData) {
   let wrapperSectionEl = document.querySelector(`.image-container`)
   
-  //rendering ONE card at the time:
+  //RENDERING ONE CARD at the time:
   for (const card of cardsData) { //cardsData refers to "images" in the db.json
     let articleEl = document.createElement(`article`) 
     articleEl.setAttribute(`class`, `image-card`)
@@ -55,6 +58,12 @@ function renderCards(cardsData) {
       buttonLikeEl.setAttribute(`class`, `like-button`)
       buttonLikeEl.innerText = `♥`
 
+      // - Have the like button adding 1 like to the respective counter each time you click it, and display the changes
+      //1. add eventListener to the likeBtn -when click -> add++ to the likes
+      buttonLikeEl.addEventListener(`click`, function() {
+        spanEl.innerText = `${card.likes++} likes`
+      })
+
     //comment Ul
     let ulEl = document.createElement(`ul`)
     ulEl.setAttribute(`class`, `comments`)
@@ -65,29 +74,44 @@ function renderCards(cardsData) {
       liEl.innerText = comment.content
         ulEl.append(liEl)
     }
-
     
-    wrapperSectionEl.append(articleEl)
-    articleEl.append(titleEl, imgEl, likesDivEl, ulEl) //missing the form after the Ul
-    likesDivEl.append(spanEl, buttonLikeEl)
-
-  }
-}
+  // - Have the comments form to add another comment to the respective post, and display the changes
+  //2.create the form - use fetch update to ADD one more comment to that post
   
+  //form:
+  let formEl = document.createElement(`form`)
+  formEl.setAttribute(`class`, `comment-form`)
 
+    let inputEl = document.createElement(`input`)
+    inputEl.setAttribute(`class`, `comment-input`)
+    inputEl.setAttribute(`type`, `text`)
+    inputEl.setAttribute(`name`, `comment`)
+    inputEl.setAttribute(`placeholder`, `Add a comment...`)
 
-//   //form
-//   let formEL = document.createElement(`form`)
-//   formEL.setAttribute(`class`, `comment-form`)
+    let buttonCommentEl = document.createElement(`button`)
+    buttonCommentEl.setAttribute(`class`, `comment-button`)
+    buttonCommentEl.setAttribute(`type`, `submit`) //type: SUBMIT
 
-//     let inputEL = document.createElement(`input`)
-//     inputEL.setAttribute(`class`, `comment-input`)
-//     inputEL.setAttribute(`type`, `text`)
-//     inputEL.setAttribute(`name`, `comment`)
-//     inputEL.setAttribute(`placeholder`, `Add a comment...`)
+    wrapperSectionEl.append(articleEl)
+    articleEl.append(titleEl, imgEl, likesDivEl, ulEl, formEl) //missing the form after the Ul
+    likesDivEl.append(spanEl, buttonLikeEl)
+    formEl.append(inputEl, buttonCommentEl)
+    //quando submit il form
+    //deve  create un nuovo commento dentro l'array dei commenti nella card
+    
+    buttonCommentEl.addEventListener(`submit`, function(event) {
+      
+    //   fetch(`http://localhost:3000/images/${card.id}`, {
+    //   method: `POST`,
+    //   headers: {
+    //   "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({  //in here put what you want the updates to be
 
-//     let buttonCommentEL = document.createElement(`button`)
-//     buttonCommentE.setAttribute(`class`, `comment-button`)
-//     buttonCommentE.setAttribute(`type`, `submit`)
-
-
+    //     // card.comments.push(event)})
+    //   // ${card.likes++} likes
+    //   })
+    // })
+    })
+  } //end of render one card of Cards (for of loop)
+} //end of renderCards()
