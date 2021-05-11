@@ -19,17 +19,20 @@
 // - Have the like button adding 1 like to the respective counter each time you click it, and display the changes
 // - Have the comments form to add another comment to the respective post, and display the changes
 // - The data must be persisted in the server so that when you refresh the page it doesn't go away
+function getPosts() {
+  fetch("http://localhost:3000/images")//I am calling a db named "images"
+    .then(function(response) {
+      return response.json() //trasform json into obj js
+    })
+    .then(function(postsData) {  // I am giving the name to the obj received before
+      console.log(postsData)
+  
+      renderCards(postsData)
+    })
+    .catch(console.error)
+}
 
-fetch("http://localhost:3000/images")//I am calling a db named "images"
-  .then(function(response) {
-    return response.json() //trasform json into obj js
-  })
-  .then(function(postsData) {  // I am giving the name to the obj received before
-    console.log(postsData)
-
-    renderCards(postsData)
-  })
-  .catch(console.error)
+getPosts()
 
 
 function renderCards(cardsData) {
@@ -60,11 +63,27 @@ function renderCards(cardsData) {
 
       // - Have the like button adding 1 like to the respective counter each time you click it, and display the changes
       //1. add eventListener to the likeBtn -when click -> add++ to the likes
-      buttonLikeEl.addEventListener(`click`, function() {
-        spanEl.innerText = `${card.likes++} likes`
+      buttonLikeEl.addEventListener(`click`, function(event) {
+        event.preventDefault()
+        // console.log(card.likes)
+
+        fetch(`http://localhost:3000/images/${card.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            likes: ++card.likes
+          })
+        })
+        .then(function() {
+          spanEl.innerText = `${card.likes} likes` //recalling the span with the likes
+        })
       })
 
-    //comment Ul
+
+
+    //COMMENTS Ul
     let ulEl = document.createElement(`ul`)
     ulEl.setAttribute(`class`, `comments`)
     
@@ -72,7 +91,7 @@ function renderCards(cardsData) {
     for (const comment of card.comments) {
       let liEl = document.createElement(`li`)
       liEl.innerText = comment.content
-        ulEl.append(liEl)
+      ulEl.append(liEl)
     }
     
   // - Have the comments form to add another comment to the respective post, and display the changes
@@ -82,36 +101,54 @@ function renderCards(cardsData) {
   let formEl = document.createElement(`form`)
   formEl.setAttribute(`class`, `comment-form`)
 
-    let inputEl = document.createElement(`input`)
+    let inputEl = document.createElement(`input`) //new Comment is here
     inputEl.setAttribute(`class`, `comment-input`)
     inputEl.setAttribute(`type`, `text`)
     inputEl.setAttribute(`name`, `comment`)
-    inputEl.setAttribute(`placeholder`, `Add a comment...`)
-
+    inputEl.setAttribute(`placeholder`, `Add a comment...`)  
+    
     let buttonCommentEl = document.createElement(`button`)
     buttonCommentEl.setAttribute(`class`, `comment-button`)
     buttonCommentEl.setAttribute(`type`, `submit`) //type: SUBMIT
+    buttonCommentEl.innerText = "Post"
+    
+    //quando submit il form
+    //deve  create un nuovo commento dentro l'array dei commenti nella card
+    
+    
+    // function addComment() {
+      formEl.addEventListener(`submit`, function(event) {
+        console.log(inputEl)
+        event.preventDefault()
+        fetch(`http://localhost:3000/comments`, { //we want to fetch only this card
+          method: `POST`,   //we want to create a new comment
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({  //in here put what you want the updates to be
+            content: inputEl.value,
+            imageId: card.id
+          })//PATCH body=data I want to create in the db
+        })//fetch card.id to add comment
+        .then(function() {
+          ulEl = document.querySelector(`ul`)
+          let newliEl = document.createElement(`li`)
+          newliEl.innerText = inputEl.value
+          ulEl.append(newliEl)
+        })
+        
+        formEl.reset();
+      }) //buttonCommentEL.addEventListener 
+    // }//function addComment
 
     wrapperSectionEl.append(articleEl)
     articleEl.append(titleEl, imgEl, likesDivEl, ulEl, formEl) //missing the form after the Ul
     likesDivEl.append(spanEl, buttonLikeEl)
     formEl.append(inputEl, buttonCommentEl)
-    //quando submit il form
-    //deve  create un nuovo commento dentro l'array dei commenti nella card
-    
-    buttonCommentEl.addEventListener(`submit`, function(event) {
-      
-    //   fetch(`http://localhost:3000/images/${card.id}`, {
-    //   method: `POST`,
-    //   headers: {
-    //   "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({  //in here put what you want the updates to be
 
-    //     // card.comments.push(event)})
-    //   // ${card.likes++} likes
-    //   })
-    // })
-    })
   } //end of render one card of Cards (for of loop)
 } //end of renderCards()
+
+
+//QUESTION = il primo click dei like non lo salva, ma dal secondo in poi si.why??
+//QUESTION = i commenti li crea nel server ma li visualizzi solo se aggiorni la pagina.
